@@ -65,20 +65,28 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
 
         //TO BE IMPLEMENTED FIRST
      
-      //for (.....)  
+    for (int row = 0; row < 8; row++){
+        for (int col = 0; col < 8; col++){
+            boolean isWhiteSquare = (row+col) % 2 == 0;
+            board[row][col] = new Square (this, isWhiteSquare, row, col);
+            this.add(board[row][col]);
+        }
+    }  
 //        	populate the board with squares here. Note that the board is composed of 64 squares alternating from 
 //        	white to black.
+
         
         
         initializePieces();
         
 
-        this.setPreferredSize(new Dimension(400, 400));
-        this.setMaximumSize(new Dimension(400, 400));
-        this.setMinimumSize(this.getPreferredSize());
-        this.setSize(new Dimension(400, 400));
-
+             board[7][4].put(new Piece(true, RESOURCES_WKING_PNG));
+        board[0][4].put(new Piece(true, RESOURCES_BKING_PNG));
+         for (int i = 0; i < 8; i++) {
+            board[6][i].put(new Piece(true, RESOURCES_WPAWN_PNG));
+            board[1][i].put(new Piece(false, RESOURCES_BPAWN_PNG));
         whiteTurn = true;
+         }
 
     }
 
@@ -87,9 +95,12 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
 	//since we only have one kind of piece for now you need only set the same number of pieces on either side.
 	//it's up to you how you wish to arrange your pieces.
     void initializePieces() {
-    	
-    	// board[0][0].put(new Piece(true, path+ RESOURCES_WKING_PNG));
-        
+    for (int col = 0; col < 8; col++){	
+    	board[1][col].put(new Piece(false, RESOURCES_BPAWN_PNG));
+    }
+    for (int col = 0; col < 8; col++){
+        board[6][col].put(new Piece(true, RESOURCES_WPAWN_PNG));
+    }
 
     }
 
@@ -167,15 +178,45 @@ public class Board extends JPanel implements MouseListener, MouseMotionListener 
     //moving the new piece to it's new board location. 
     @Override
     public void mouseReleased(MouseEvent e) {
-        Square endSquare = (Square) this.getComponentAt(new Point(e.getX(), e.getY()));
-        
-        //using currPiece
-        
-       
+    if (currPiece == null || fromMoveSquare == null) {
+        return;
+    }
+
+    Square endSquare = (Square) this.getComponentAt(new Point(e.getX(), e.getY()));
+
+    if (endSquare == null) {
         fromMoveSquare.setDisplay(true);
         currPiece = null;
         repaint();
+        return;
     }
+
+    int fromRow = fromMoveSquare.getRow();
+    int fromCol = fromMoveSquare.getCol();
+    int toRow = endSquare.getRow();
+    int toCol = endSquare.getCol();}
+
+    // Check if the move is legal
+    public boolean isLegalMove(Board boardObj, int fromRow, int fromCol, int toRow, int toCol) {
+
+    Square[][] board = boardObj.getSquareArray();
+    Square start = board[fromRow][fromCol];
+    Square end = board[toRow][toCol];
+
+    ArrayList<Square> legalMoves = getLegalMoves(boardObj, start);{
+
+    if (legalMoves == null) {
+        return false;
+    }
+
+    return legalMoves.contains(end);
+}
+
+    currPiece = null;
+    fromMoveSquare = null;
+
+    repaint();
+}    
 
     @Override
     public void mouseDragged(MouseEvent e) {
