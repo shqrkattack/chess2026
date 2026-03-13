@@ -26,6 +26,9 @@ private boolean color;   // true = white, false = black
         return color;
     }
 
+
+
+
     public Image getImage() {
         return img;
     }
