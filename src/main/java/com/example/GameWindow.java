@@ -14,12 +14,9 @@ import javax.swing.*;
 //messages that pop up (see below). Everything else should already work.
 public class GameWindow {
     private JFrame gameWindow;
-    
     public Clock blackClock;
     public Clock whiteClock;
-    
     private Timer timer;
-    
     private Board board;
     
     
@@ -34,7 +31,7 @@ public class GameWindow {
         
 
         try {
-            Image whiteImg = ImageIO.read(getClass().getResource("wp.png"));
+            Image whiteImg = ImageIO.read(new File(System.getProperty("user.dir")+Board.PICTURE_PATH+"wp.png"));
             gameWindow.setIconImage(whiteImg);
         } catch (Exception e) {
             System.out.println("Game file wp.png not found");
@@ -66,7 +63,6 @@ public class GameWindow {
     }
     
 // Helper function to create data panel
-    
     private JPanel gameDataPanel(final String bn, final String wn, 
             final int hh, final int mm, final int ss) {
         
@@ -227,6 +223,9 @@ public class GameWindow {
         return buttons;
     }
     
+
+    //precondition: the game was properly intialized and a checkmate position was reached.
+    //postcondition: the game ends and a message is displayed letting the user know who won.
     public void checkmateOccurred (boolean whiteWins) {
         if (whiteWins) {
             if (timer != null) timer.stop();
